@@ -1,0 +1,131 @@
+DATABASE = []
+
+
+def parse_record(record_str, field_structure):
+    record_dict = {}
+    for field in record_str.split(','):
+        key, value = field.split('=')
+        if key.strip() in field_structure:
+            record_dict[key.strip()] = value.strip()
+    return record_dict
+
+
+def create_user(user_str, field_structure):
+
+    try:
+        user_dict = parse_record(user_str, field_structure)
+        DATABASE.append(user_dict)
+        print("User created successfully")
+    except Exception as err:
+        print(f"Error creating user: {err}")
+
+
+def create_record(record_str, field_structure):
+
+    try:
+        record_dict = parse_record(record_str, field_structure)
+        DATABASE.append(record_dict)
+        print("Record created successfully")
+    except Exception as err:
+        print(f"Error creating record: {err}")
+
+
+def read_all_records():
+
+    if DATABASE:
+        print("Records in the database:")
+        for index, record in enumerate(DATABASE, 1):
+            print(f"{index}. {record}")
+    else:
+        print("The database is empty")
+
+
+def update_record(record_id, field_name, new_value):
+
+    found = False
+    for record in DATABASE:
+        if str(record.get('id')) == record_id:
+            record[field_name] = new_value
+            print(f"Record with ID {record_id} updated successfully")
+            found = True
+            break
+    if not found:
+        print(f"Record with ID {record_id} not found")
+
+
+def delete_record(record_id):
+
+    for index, record in enumerate(DATABASE):
+        if str(record.get('id')) == record_id:
+            del DATABASE[index]
+            print(f"Record with ID {record_id} deleted successfully")
+            return
+    print(f"Record with ID {record_id} not found")
+
+
+def delete_user(user_id):
+
+    for index, user in enumerate(DATABASE):
+        if str(user.get('id')) == user_id:
+            del DATABASE[index]
+            print(f"User with ID {user_id} deleted successfully")
+            return
+    print(f"User with ID {user_id} not found")
+
+
+def main():
+    user_structure = ("id", "first_name", "second_name", "email", "password")
+    record_structure = ("id", "date", "content", "user", "title")
+
+    create_user("id=1,first_name=John,second_name=Doe,email=john@gmail.com,password=1234", user_structure)
+    create_user("id=2,first_name=Alice,second_name=Smith,email=alice@gmail.com, password=5678", user_structure)
+    create_user("id=3,first_name=Bob,second_name=Johnson,email=bob@gmail.com,password=9012", user_structure)
+
+    create_record("id=4,date=26.02.2004, content=Some example #1, user=1, title=Example title", record_structure)
+    create_record("id=5,date=01.10.2013, content=Some example #2, user=3, title=Example title one", record_structure)
+    create_record("id=6,date=12.13.2008, content=Some example #3, user=2, title=Example title of user 2", record_structure)
+
+    read_all_records()
+    delete_user('1')
+    read_all_records()
+    update_record('5', 'id', '9')
+    read_all_records()
+
+'''
+    while True:
+        print("\nMenu:")
+        print("1. Create a user")
+        print("2. Create a record")
+        print("3. Read all records")
+        print("4. Update a record")
+        print("5. Delete a record")
+        print("6. Delete a user")
+        print("7. Exit")
+        choice = input("Choose an action: ")
+        if choice == "1":
+            user_str = input("Enter data for a new user (id=first_name=last_name=age): ")
+            create_user(user_str, user_structure)
+        elif choice == "2":
+            record_str = input("Enter data for a new record (id=user=position=text): ")
+            create_record(record_str, record_structure)
+        elif choice == "3":
+            read_all_records()
+        elif choice == "4":
+            record_id = input("Enter the ID of the record to update: ")
+            field_name = input("Enter the field name to update: ")
+            new_value = input("Enter the new value for the field: ")
+            update_record(record_id, field_name, new_value)
+        elif choice == "5":
+            record_id = input("Enter the ID of the record to delete: ")
+            delete_record(record_id)
+        elif choice == "6":
+            user_id = input("Enter the ID of the user to delete: ")
+            delete_user(user_id)
+        elif choice == "7":
+            break
+        else:
+            print("Unknown command")
+'''
+
+if __name__ == "__main__":
+    main()
